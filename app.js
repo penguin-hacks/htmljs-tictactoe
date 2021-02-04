@@ -28,21 +28,20 @@ function computer_player_turn() {
   const available_tics = [];
   const winning_combos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
   $.each(winning_combos, function(index, value){
+    
     let first = $('#'+value[0]).html();    // $('#3').html()
     let second = $('#'+value[1]).html();    // $('#4').html()
-    let third = $('#'+value[2]).html();		 // $('#5').html()
+    let computerTurn = $('#'+value[2]).html();		 // $('#5').html()
     if(first == second) {
-     
-    }
+      if (computerTurn === '#') {
+       $(available_tics[computerTurn]).html('O');
+      } else {
+        const dumb_computer_choice = Math.floor(Math.random() * available_tics.length);
+        $(available_tics[dumb_computer_choice]).html('O');
+      };
+    };
   });
-  $.each($('.tic'), function(index, value) {
-      if($(value).html() == '#') {
-          available_tics.push(value);
-      }
-  });
-
-  const computer_choice = Math.floor(Math.random() * available_tics.length);
-  $(available_tics[computer_choice]).html('O');
+  
 };
 
 function check_for_winner() {
