@@ -1,13 +1,18 @@
 $(document).ready(function() {
-  computer_player_turn();
+  const whoTurn = Math.floor(Math.random() * [1, 2].length);
+  if (whoTurn === 1) {
+    computer_player_turn();
+  };
   // The Listener -- these functions trigger when users do things
   $('.tic').click(function(e) {
+    let htmlboard = document.getElementById("gameBoard");
+    let jsboard = htmlboard.value;
+    console.log(jsboard)
     // This will run whenever anyone clicks on something with a 'tic' class.
     if ($(e.target).html() == '#') {
       $(e.target).html('X');
-
       // Computer does their turn
-      computer_player_turn();
+      computer_player_turn(jsboard);
 
       // Determine if someone wins
       check_for_winner();
@@ -24,23 +29,55 @@ $(document).ready(function() {
 
 });
 
-function computer_player_turn() {
+function computer_player_turn(board) {
+  // opponent is either X or Y
+  const opponent = "X";
+  // const board = ['O', 'X', '', '', 'X', 'X', 'O', 'O', ''];
   const available_tics = [];
   const winning_combos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
-  $.each(winning_combos, function(index, value){
-    
-    let first = $('#'+value[0]).html();    // $('#3').html()
-    let second = $('#'+value[1]).html();    // $('#4').html()
-    let computerTurn = $('#'+value[2]).html();		 // $('#5').html()
-    if(first == second) {
-      if (computerTurn === '#') {
-       $(available_tics[computerTurn]).html('O');
-      } else {
-        const dumb_computer_choice = Math.floor(Math.random() * available_tics.length);
-        $(available_tics[dumb_computer_choice]).html('O');
-      };
-    };
+
+  console.log("Starting the loop...");
+
+  let kill_shot = '';
+
+  $.each(winning_combos, function(combo_index, combo_series){
+
+    const first_step = combo_series[0];
+    const second_step = combo_series[1];
+    const third_step = combo_series[2];
+
+
+    if(board[first_step] === opponent && board[second_step] === opponent && board[third_step] === '') {
+      console.log("We have a winner!", third_step);
+      kill_shot = third_step;
+      return(false);
+    }
+  
   });
+if (kill_shot === '') {
+  console.log("Winning Move: ", kill_shot);
+  return(kill_shot);
+};
+const dumb_computer_choice = Math.floor(Math.random() * available_tics.length);
+$(available_tics[dumb_computer_choice]).html('O');
+
+  // $.each(winning_combos, function(index, value){
+    
+  //   let first = $('#'+value[0]).html();    // $('#3').html()
+  //   let second = $('#'+value[1]).html();    // $('#4').html()
+  //   let computerTurn = $('#'+value[2]).html();	 // $('#5').html()
+  //   if(first === second) {
+  //     if (computerTurn === '#') {
+  //      $(available_tics[computerTurn]).html('O');
+  //     } else {
+  //       const dumb_computer_choice = Math.floor(Math.random() * available_tics.length);
+  //       $(available_tics[dumb_computer_choice]).html('O');
+  //     };
+  //   } else {
+  //     const dumb_computer_choice = Math.floor(Math.random() * available_tics.length);
+  //     $(available_tics[dumb_computer_choice]).html('O');
+  //   };
+  // });
   
 };
 
